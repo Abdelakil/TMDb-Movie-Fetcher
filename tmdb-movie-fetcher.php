@@ -199,3 +199,45 @@ function fetch_watch_providers_data($movie_id) {
 }
 
 
+// Random trending movie poster shortcode
+function tmdb_random_trending_movie_poster_shortcode() {
+    $random_movie_data = fetch_random_trending_movie();
+
+    if ($random_movie_data) {
+        $poster_path = $random_movie_data['poster_path'];
+        $poster_url = "https://image.tmdb.org/t/p/w500{$poster_path}";
+        return '<img src="' . $poster_url . '" alt="' . $random_movie_data['title'] . '">';
+    } else {
+        return 'Error: Could not fetch random trending movie data.';
+    }
+}
+
+// Fetch random trending movie data
+function fetch_random_trending_movie() {
+    $time_window = 'week'; // You can change this to 'day' if you want daily trending movies
+    $api_url = "https://api.themoviedb.org/3/trending/movie/{$time_window}?api_key=" . TMDB_API_KEY;
+
+    $response = wp_remote_get($api_url);
+
+    if (is_wp_error($response)) {
+        error_log('TMDb Movie Fetcher: ' . $response->get_error_message());
+        return false;
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    $data = json_decode($body, true);
+
+    if (isset($data['status_code']) && isset($data['status_message'])) {
+        error_log('TMDb Movie Fetcher: ' . $data['status_message']);
+        return false;
+    }
+
+    // Extract a random movie from the list
+    $random_index = array_rand($data['results']);
+    $random_movie = $data['results'][$random_index];
+
+    return $random_movie;
+}
+
+// Register random trending movie poster shortcode
+add_shortcode('tmdb_random_trending_movie_poster', 'tmdb_random_trending_movie_poster_shortcode');

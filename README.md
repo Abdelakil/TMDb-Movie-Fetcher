@@ -37,6 +37,8 @@ The TMDb Movie Fetcher plugin provides the following shortcodes to display movie
 - `[tmdb_movie_where_to_watch]`: Displays the streaming providers where the movie is available.
 - `[tmdb_movie_poster]`: Displays the movie poster image.
 - `[tmdb_movie_genres]`: Displays the movie genres.
+- `[tmdb_random_trending_movie_poster]`: Display the poster of a random weekly trending movie.
+
 
 ## Usage
 To use the shortcodes, insert them into the desired location (e.g., post content, page content, widget, etc.) within your WordPress website.
